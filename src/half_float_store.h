@@ -16,12 +16,15 @@ typedef struct half_float {
     int * value;
 } half_float;
 
+void init(half_float to_init) {
+    to_init.value = malloc(sizeof(int));
+}
+
 //Convert a given floating point number to half-float.
 void set_value(int* value, int* to_convert_p) {
     int to_convert = *to_convert_p;
     printf("0x%032x\n", *value);
     //Clear value
-    value = malloc(2);
     (*value) = 0x0000;
     //Pull the sign bit (from 32), and shift it to the MSB of new float
     (*value) = 0x8000 & (to_convert >> 16);
