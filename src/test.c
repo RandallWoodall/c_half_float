@@ -3,7 +3,8 @@
 
 int main(void) {
     half_float testing;
-    float testingAgain = .5;
+    float testingAgain = -.5;
     set_value(testing.value, (int*)&testingAgain);
-    printf("%f",get_value(testing.value));
+    //printf("%f", *get_value(testing.value));
+    get_value(testing.value);
 }

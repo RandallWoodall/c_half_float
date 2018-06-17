@@ -9,27 +9,33 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 //A new type that declares the space required for half a float (16-bits)
 typedef struct half_float {
-    char * value;
+    int * value;
 } half_float;
 
 //Convert a given floating point number to half-float.
-void set_value(char* value, int* to_convert_p) {
+void set_value(int* value, int* to_convert_p) {
     int to_convert = *to_convert_p;
+    printf("0x%032x\n", *value);
     //Clear value
     value = malloc(2);
     (*value) = 0x0000;
     //Pull the sign bit (from 32), and shift it to the MSB of new float
     (*value) = 0x8000 & (to_convert >> 16);
-    //Pull the most significant 10 mantissa bits (12 through 22)
-    (*value) = (*value) | (0x03FF & (to_convert >> 12));
-    //Pull the LSB from the exponent field
-    (*value) = (*value) | (0x7C00 & (to_convert >> 12));
+    printf("0x%032x\n", *value);
+    //Pull the least significant 10 mantissa bits (12 through 22)
+    //(*value) = (*value) | (0x03FF & (to_convert >> 13));
+    //Pull the MSB from the exponent field
+    //(*value) = (*value) | (0x7C00 & (to_convert >> 16));
 }
 
 //Convert a half_float to a float
-float get_value(char* value) {
-    return (float)(((0x8000 & (*value))<<16) | ((0x7C00 & (*value))<<12) | ((0x03FF & (*value))<<12));
+float * get_value(int* value) {
+    float * toRet = malloc(sizeof(int));
+    printf("0x%032x", *value);
+    (*toRet) = (0x80000000 & ((*value)<<16)) | (0x72F8F1FF);
+    return toRet;
 }
