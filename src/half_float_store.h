@@ -10,35 +10,39 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 //A new type that declares the space required for half a float (16-bits)
 typedef struct half_float {
-    int * value;
+    int value;
 } half_float;
 
-void init(half_float to_init) {
-    to_init.value = malloc(sizeof(int));
-}
-
 //Convert a given floating point number to half-float.
-void set_value(int* value, int* to_convert_p) {
-    int to_convert = *to_convert_p;
-    printf("0x%032x\n", *value);
+void set_value(int value, float to_convert_f) {
+    int to_convert = *(int *)&to_convert_f;
+    //Get the sign, exponent, and mantissa
+    int exponent;
     //Clear value
-    (*value) = 0x0000;
+    value = 0x0000;
     //Pull the sign bit (from 32), and shift it to the MSB of new float
-    (*value) = 0x8000 & (to_convert >> 16);
-    printf("0x%032x\n", *value);
-    //Pull the least significant 10 mantissa bits (12 through 22)
-    //(*value) = (*value) | (0x03FF & (to_convert >> 13));
-    //Pull the MSB from the exponent field
-    //(*value) = (*value) | (0x7C00 & (to_convert >> 16));
+    value = 0x8000 & (to_convert >> 16);
+    //Pull the most significant 10 mantissa bits (12 through 22)
+    value = value | (0x03FF & (to_convert >> 13));
+    //Pull the exponent field, normalize and set up for half precision
+    exponent = 0x00FF & (to_convert >> 23);
+    exponent = exponent - 127;
+    if(exponent > 30)
+        value = 0x7FE0;
+    else {
+        exponent = exponent + 15;
+    }
+    //Put in the exponent
+    value = value | (exponent << 10);
 }
 
 //Convert a half_float to a float
-float * get_value(int* value) {
-    float * toRet = malloc(sizeof(int));
-    printf("0x%032x", *value);
-    (*toRet) = (0x80000000 & ((*value)<<16)) | (0x72F8F1FF);
+float * get_value(int value) {
+    float * toRet = (float*)malloc(sizeof(int));
+    (*toRet) =((0x8000 & value) << 16) | (0x72F8);
     return toRet;
 }
