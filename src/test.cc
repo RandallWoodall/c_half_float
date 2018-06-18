@@ -1,12 +1,10 @@
-#include <stdio.h>
+#include <iostream>
 #include "half_float_store.hh"
 
 int main(void) {
     half_float testing;
-    //init(testing);
+    half_float test2(15.30912);
     float testingAgain = -20.05;
-    testing.value = (short*)malloc(sizeof(short));
-    //init(testing);
-    set_value(testing.value, testingAgain);
-    printf("%f\n", *get_value(testing.value));
+    testing.set_value(testingAgain);
+    std::cout << testing.get_value() << std::endl << test2.get_value() << std::endl;
 }
