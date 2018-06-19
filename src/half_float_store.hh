@@ -8,7 +8,7 @@
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
  */
 
-#include <stdlib.h>
+#include <cstdlib>
 
 //A new type that declares the space required for half a float (16-bits)
 //(Utilizes a short.)
