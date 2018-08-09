@@ -9,11 +9,12 @@
  */
 #ifndef HALF_FLOAT
 #define HALF_FLOAT
+#include <cstdint>
 //A new type that declares the space required for half a float (16-bits)
 //(Utilizes a short.)
 class half_float {
     private:
-        short * value;
+        int16_t value;
     public:
         half_float();
         half_float(float to_convert);

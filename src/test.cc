@@ -11,10 +11,11 @@
 int main(int argc, char ** argv) {
     //Generate argv[0] float values, store them in a file
     srand(time(NULL));
-    std::ofstream file;
-    file.open("setup.dat");
-    for(int i = 0; i < std::stoi(argv[1]); i++)
-        file << static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/5000)) << std::endl;
+    //std::ofstream file;
+    //file.open("setup.dat");
+    //for(int i = 0; i < std::stoi(argv[1]); i++)
+    //    file << static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/5000)) << std::endl;
     //All values are in the file, time pulling and calculation with float
-
+    half_float value = half_float(1.5743);
+    std::cout << value.get_value() << std::endl;
 }

@@ -13,12 +13,12 @@
 
 //Initialize the value to a memory address for short.
 half_float::half_float() {
-    value = (short*)malloc(sizeof(short));
+    value = 0;
 }
 
 //Value added constructor taking a value.
 half_float::half_float(float to_convert) {
-    value = (short*)malloc(sizeof(short));
+    value = 0;
     set_value(to_convert);
 }
 
@@ -27,21 +27,21 @@ void half_float::set_value(float to_convert_f) {
     //Convert to an integer point for bitwise, declare exponent
     int to_convert = *(int *)&to_convert_f, exponent;
     //Clear value
-    (*value) = 0x0000;
+    value = 0x0000;
     //Pull the sign bit (from 32), and shift it to the MSB of new float
-    (*value) = 0x8000 & (to_convert >> 16);
+    value = 0x8000 & (to_convert >> 16);
     //Pull the most significant 10 mantissa bits (12 through 22)
-    (*value) = (*value) | (0x03FF & (to_convert >> 13));
+    value = value | (0x03FF & (to_convert >> 13));
     //Pull the exponent field, normalize and set up for half precision
     exponent = (0x00FF & (to_convert >> 23)) - 127 + 15;
     //Put in the exponent
-    (*value) = (*value) | ((exponent << 10) & 0x7C00);
+    value = value | ((exponent << 10) & 0x7C00);
 }
 
 //Convert a half_float to a float
 float half_float::get_value() {
     int * toRet = (int*)malloc(sizeof(int));
-    int exponent = ((*value) & 0x7C00) >> 10;
+    int exponent = (value & 0x7C00) >> 10;
     //Check for special cases of the exponent
     //If the exponent is 11111, we will assume real values were the origin
     if((exponent ^ 0x001F) == 0)
@@ -49,6 +49,6 @@ float half_float::get_value() {
     //Else assume normalized
     else
         exponent = exponent - 15 + 127;
-    (*toRet) =((0x8000 & (*value)) << 16) | (exponent << 23) | ((0x03FF & (*value)) << 13);
+    (*toRet) =((0x8000 & value) << 16) | (exponent << 23) | ((0x03FF & value) << 13);
     return *(float*)toRet;
 }
